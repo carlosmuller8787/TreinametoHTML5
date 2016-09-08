@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Lista telefonica</title>
-    <link rel="stylesheet" type="text/css" href="bootstrap.css">
+    <link rel="stylesheet" href="bootstrap.css">
     <script type="text/javascript" src="angular.min.js"></script>
     <script type="text/javascript">
       angular.module("ListaTelefonica", []);
@@ -35,29 +35,34 @@
       });
     </script>
     <style>
-      .jumbotron {
-        width: : 400px;
-        text-align: center;
-        margin-top: 20px;
-        margin-left: auto;
-        margin-right: auto;
-      }
+    .jumbotron {
+      width: 900px;
+      text-align: center;
+      margin-top: 20px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-      th{
-        text-align: center;
-      }
-      .form-control{
-        margin-top: 5px;
-        margin-bottom: 5px;
-      }
+    .table {
+         margin-top: 60px;
+    }
 
-      .selecionado > td{
-        background-color: yellow !important;
-      }
+    th {
+      text-align: center;
+    }
 
-      .selecionado_negrito{
-        font-weight: bold;
-      }
+    .form-control {
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .selecionado > td{
+      background-color: yellow !important;
+    }
+
+    .selecionado_negrito{
+      font-weight: bold;
+    }
 
     </style>
   </head>
@@ -65,30 +70,39 @@
     <div class="jumbotron">
       <h4 ng-bind="message"></h4>
 
-    <table class="table table-striped">
-      <tr>
-        <th></th>
-        <th>Nome</th>
-        <th>Telefone</th>
-        <th>Operadora</th>
-      </tr>
-      <tr ng-repeat="contato in contatos" ng-class="{'selecionado':contato.selecionado, 'selecionado_negrito':contato.selecionado}">
-        <td><input type="checkbox" ng-model="contato.selecionado"></td>
-        <td>{{contato.nome}}</td>
-        <td>{{contato.telefone}}</td>(contatos);
-        <td>{{contato.nome}}</td>
-        <td>{{contato.operadora.nomeoperadora}}</td>
-      </tr>
-    </table>
+      <table class="table table-striped" ng-show="contatos.length > 0" ng-hidde="!contatos.length > 0">
+        <tr>
+          <th></th>
+          <th>Nome</th>
+          <th>Telefone</th>
+          <th>Operadora</th>
+        </tr>
+        <tr ng-repeat="contato in contatos" ng-class="{'selecionado':contato.selecionado, 'selecionado_negrito':contato.selecionado}">
+          <td>
+            <input type="checkbox" ng-model="contato.selecionado">
+          </td>
+          <td>{{contato.nome}}</td>
+          <td>{{contato.telefone}}</td>
+          <td>{{contato.operadora.nomeoperadora}}</td>
+        </tr>
+      </table>
 
-    <input type="text" class="form-control" id="name" ng-model="contato.nome" placeholder="Nome">
-    <input type="text" class="form-control" id="fone" ng-model="contato.telefone" placeholder="Telefone">
-    <select ng-model="contato.operadora" class="form-control" ng-options="operadora as operadora.nomeoperadora group by operadora.tipo for operadora in operadoras">
-      <option value="">selecione uma operadora</option>
-    </select>
-    <input type="button" class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" value="Adicionar" ng-disabled="!contato.nome || !contato.telefone">
-    <input type="button" class="btn btn-danger btn-block" value="Apagar" ng-click="apagarContatos(contatos)" ng-disabled="!isContatoSelecionado(contatos)">
-    {{contato}}
+      <form name="contact">
+        <input type="text" class="form-control" name="name" ng-model="contato.nome" placeholder="Nome" ng-required="true">
+        <div class="alert alert-danger" ng-if="contact.name.$invalid">
+            Campo nome é obrigatorio
+        </div>
+        <input type="text" class="form-control" id="fone" ng-model="contato.telefone" placeholder="Telefone">
+        <select  name="operadora" ng-required="true" ng-model="contato.operadora" class="form-control" ng-options="operadora as operadora.nomeoperadora group by operadora.tipo for operadora in operadoras">
+          <option value="">selecione uma operadora</option>
+        </select>
+        <div class="alert alert-danger" ng-if="contact.operadora.$invalid">
+            Campo operadora é obrigatorio
+        </div>
+        <input type="button" class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" value="Adicionar" ng-disabled="contact.$invalid">
+        <input type="button" class="btn btn-danger btn-block" value="Apagar" ng-click="apagarContatos(contatos)" ng-if="isContatoSelecionado(contatos)">
+      </form>
+      <!--{{contato}}-->
     </div>
   </body>
 </html>
