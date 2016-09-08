@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript">
+      var array1 = [];
+      var array2 = [];
+      var operacao = {};
+      operacao.soma = ()=>{
+        var array3 = [];
+        for (var i = 0; i < array1.length; i++) {
+          array3.push(array1[i] + array2[i]);
+        }
+
+        document.getElementById('r3').innerHTML = array3;
+      };
+
+      operacao.subtracao = () => {
+        var array3 = [];
+        for (var i = 0; i < array1.length; i++) {
+          array3.push(array1[i] - array2[i]);
+        }
+
+        document.getElementById('r3').innerHTML = array3;
+      };
+
+      operacao.multiplicacao = () => {
+        var array3 = [];
+        for (var i = 0; i < array1.length; i++) {
+          array3.push(array1[i] * array2[i]);
+        }
+
+        document.getElementById('r3').innerHTML = array3;
+      };
+
+      operacao.divisao = () => {
+        var array3 = [];
+        for (var i = 0; i < array1.length; i++) {
+          array3.push(array1[i] / array2[i]);
+        }
+
+        document.getElementById('r3').innerHTML = array3;
+      };
+
+      function adiciona(){
+        array1.push(Number(document.getElementById('v1').value));
+        array2.push(Number(document.getElementById('v2').value));
+
+        if(array1.length >= 3){
+          document.getElementById('add').disabled = true;
+          document.getElementById('calcular').disabled = false;
+        }
+      }
+
+      function calcula(){
+        document.getElementById('r1').innerHTML = array1;
+        document.getElementById('r2').innerHTML = array2;
+
+        var opt = prompt("Informe a operação(soma|divisao|multiplicao|subtracao)", "soma");
+        if(/soma|divisao|multiplicao|subtracao$/.test(opt)){
+           operacao[opt]();
+        }
+
+      }
+
+      function mKeyEvent(event){
+        if(event.keyCode ==187 ||event.keyCode == 189|| event.keyCode ==        193 ||event.keyCode ==        56){
+
+             operacao[operacao.soma]();
+          }
+
+            }
+
+    </script>
+
+  </head>
+  <body onkeydown="mKeyEvent(event);">
+    <input type="text" name="v1" id="v1" value="5"><br>
+    <input type="text" name="v2" id="v2" value="6"><br>
+    <input type="button" name="add" id="add" value="adicionar" onclick="adiciona();"><br>
+    <input type="button" name="calcular" id="calcular" value="calcular" onclick="calcula();" disabled="true"><br>
+    <p id="r1" ></p>
+    <p id="r2" ></p>
+    <p id="r3" ></p>
+  </body>
+</html>
