@@ -8,6 +8,8 @@
     <script type="text/javascript" src="angular-messages.js"></script>
 
     <script type="text/javascript">
+
+
       angular.module("ListaTelefonica", ['ngMessages']);
 
       angular.module("ListaTelefonica").filter("arruma_nome",() =>{
@@ -21,18 +23,18 @@
           }
         });
 
-      angular.module("ListaTelefonica").controller("ListaTelefonicaCtrl", function($scope){
+      angular.module("ListaTelefonica").controller("ListaTelefonicaCtrl", function($scope, $http){
         $scope.message = "Lista Telefonica";
-        $scope.contatos = [{nome: 'Leonel Azevedo', telefone: "9222-3547", criacao: new Date()},
-                            {nome: 'Darlan del Marco', telefone: "9712-3547", criacao: new Date()},
-                            {nome: 'Megan Desconhecida', telefone: "9112-1547", criacao: new Date()},
-                            {nome: 'Carlos Ricardo Müller', telefone: "9713-3547", criacao: new Date()},
-                            {nome: 'Luan Teste', telefone: "9713-4547", criacao: new Date()}];
-        $scope.operadoras = [{nomeoperadora: 'Vivo', ddd: "014", tipo: "movél"},
-                                                {nomeoperadora: 'Embratel', ddd: "021", tipo: "fixo"},
-                                                {nomeoperadora: 'Claro', ddd: "045", tipo: "movél"}];
+        $scope.contatos = [];
+        $scope.operadoras = [];
+
         $scope.adicionarContato = function(contato){
-          $scope.contatos.push(angular.copy(contato));
+          $http.post('http://10.125.1.123:8080/adicionar-contato', contato).success((data)=>{
+            alert(data);
+          });
+          $http.get('http://10.125.1.123:8080/contatos').success((data)=>{
+            $scope.contatos = data;
+          });
           delete $scope.contato;
           $scope.contact.$setPristine(true);
         }
@@ -54,6 +56,13 @@
           $scope.propertyName = propertyName;
         }
 
+        $http.get('http://10.125.1.123:8080/contatos').success((data)=>{
+          $scope.contatos = data;
+        });
+
+        $http.get('http://10.125.1.123:8080/operadoras').success((data)=>{
+          $scope.operadoras = data;
+        });
       });
     </script>
     <style>
@@ -129,7 +138,7 @@
             Telefone  inválido
         </div>
 
-        <select  name="operadora" ng-required="true" ng-model="contato.operadora" class="form-control" ng-options="operadora as operadora.nomeoperadora group by operadora.tipo for operadora in operadoras">
+        <select  name="operadora" ng-required="true" ng-model="contato.operadora" class="form-control" ng-options="operadora as operadora.nome group by operadora.categoria for operadora in operadoras">
           <option value="">selecione uma operadora</option>
         </select>
         <div class="alert alert-danger" ng-if="contact.operadora.$invalid && contact.fone.$dirty">
